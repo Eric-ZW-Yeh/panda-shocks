@@ -1,0 +1,31 @@
+{
+  "title": "Panda Shocks: the Soft-Power Shock (SPS) series from giant panda births abroad, 2004–2025",
+  "upload_type": "dataset",
+  "version": "1.0",
+  "publication_date": "2026-11-01",
+  "description": "<p>Host × month series of the soft-power shock (SPS): an exogenous rise in a foreign public's exposure to a country's soft-power asset that carries no change in policy, identified from the births of giant pandas at foreign zoos in 24 host jurisdictions, 2004–2025, and measured as the dose of attention each birth draws. Each birth's dose is the jump in the host public's Google search attention to the giant panda (days 0–2 minus days −7…−3 after the zoo's announcement, in host standard-deviation units). The release contains the monthly SPS series and its variants, the 491-event database with sources, hard political events, breeding attempts, placebo animal events, travel and trade policy regimes, and the daily attention windows behind every dose. Companion to Yeh (2026), “Soft Power Shocks: Does Attention to a Symbol Translate into Bilateral Exchange?”</p>",
+  "creators": [
+    {
+      "name": "Yeh, Zong-Wei",
+      "affiliation": "National Chung Cheng University"
+    }
+  ],
+  "license": "CC-BY-4.0",
+  "access_right": "open",
+  "keywords": [
+    "giant panda",
+    "soft-power shock",
+    "panda diplomacy",
+    "soft power",
+    "public attention",
+    "Google Trends",
+    "event database",
+    "instrumental variables",
+    "local projections",
+    "China",
+    "bilateral trade",
+    "tourism"
+  ],
+  "related_identifiers": [],
+  "language": "eng"
+}

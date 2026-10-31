@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Data - Panda Shocks</title>
+<meta name="description" content="Panda Shocks: the soft-power shock (SPS) series from giant-panda births abroad, 24 host jurisdictions, 2004-2025. Data by Zong-Wei Yeh, National Chung Cheng University.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site"><div class="wrap">
+<a class="brand" href="index.html"><img src="favicon.svg" alt="">Panda Shocks</a>
+<nav class="main">
+<a href="index.html">Home</a>
+<a href="data.html" class="on">Data</a>
+<a href="documentation.html">Documentation</a>
+<a href="figures.html">Figures</a>
+<a href="updates.html">Updates</a>
+</nav>
+</div></header>
+<main><div class="wrap">
+<h1>Data</h1>
+<p>All files are UTF-8 CSV. Keys: <code>host</code> (ISO 3166-1 alpha-2) and <code>month</code>
+(<code>YYYY-MM</code>) in the monthly panel, and <code>event_id</code> in the event files. Every column is
+defined in the <a href="documentation/CODEBOOK.md">codebook</a>. Data are licensed under CC BY 4.0.</p>
+
+<h2>Versions</h2>
+<!-- FILES:BEGIN -->
+<h3>Version 1.0 &middot; 2026-11 &middot; current</h3>
+<div class="table-scroll"><table>
+<tr><th>file</th><th>content</th><th>rows</th><th>size</th><th>SHA-256</th></tr>
+<tr><td><a href="data/panda_shocks_monthly.csv">panda_shocks_monthly.csv</a></td><td>host &times; month SPS series and variants, monthly Google indices</td><td class="num">6,336</td><td class="num">330 KB</td><td class="hash">f3788ca081adf8b08be965d4e11370bb525717e905a068f1fcc2dc943bbf676b</td></tr>
+<tr><td><a href="data/events.csv">events.csv</a></td><td>panda event database with doses, inclusion flags and sources</td><td class="num">491</td><td class="num">255 KB</td><td class="hash">ac319ed5f16037693f2e9ded216fea84d43777305f738225932a5c28e3ccd531</td></tr>
+<tr><td><a href="data/hard_events.csv">hard_events.csv</a></td><td>hard political events (conflict &minus;1 / summit +1) with China-topic intensity</td><td class="num">98</td><td class="num">30 KB</td><td class="hash">c6e89ae4f398c872d92c8e9e91c1feb9eb267bf3feecce63c9533fcbdbaeb340</td></tr>
+<tr><td><a href="data/attempts.csv">attempts.csv</a></td><td>announced breeding attempts and outcomes</td><td class="num">144</td><td class="num">54 KB</td><td class="hash">c42cdf5faa4089fb8f27423c18f1ef7161ea5f5cb8fe3b8ee505f80b5a4e5edb</td></tr>
+<tr><td><a href="data/placebo_animals.csv">placebo_animals.csv</a></td><td>non-China animal events (placebo)</td><td class="num">17</td><td class="num">4 KB</td><td class="hash">42a9263773946103f348f13e8d81ffeedec9f021af5477e76159bc6998ccdbff</td></tr>
+<tr><td><a href="data/policy_regimes.csv">policy_regimes.csv</a></td><td>travel and trade policy regimes with sources</td><td class="num">139</td><td class="num">53 KB</td><td class="hash">b15f90de6ffe58680e7940c30bf8f416eed9d01902315967ef860bfc6145684b</td></tr>
+<tr><td><a href="data/attention_daily_windows.csv">attention_daily_windows.csv</a></td><td>daily Google windows, rel_day &minus;60&hellip;+120 (panda, China, regional)</td><td class="num">244,712</td><td class="num">23.5 MB</td><td class="hash">8558a1424bf41a99b9b1bed5c26dd24615f28f88d4a2bb2fdc2e8fd1220ca15d</td></tr>
+<tr><td><a href="data/attention_spillover_windows.csv">attention_spillover_windows.csv</a></td><td>daily windows for China-related and placebo topics</td><td class="num">119,641</td><td class="num">10.0 MB</td><td class="hash">53c8971a73c757693659011a43454b5231234c4671a892e4a61cef708798fda7</td></tr>
+</table></div>
+<div class="table-scroll"><table>
+<tr><th>version</th><th>date</th><th>files</th><th>notes</th></tr>
+<tr><td>1.0</td><td>2026-11</td><td>8</td><td>First release; SPS series frozen at the build used in the working paper. See <a href="CHANGELOG.md">CHANGELOG.md</a>.</td></tr>
+</table></div>
+<!-- FILES:END -->
+<p class="sub">Checksums are also in <a href="data/SHA256SUMS.txt">SHA256SUMS.txt</a>. To verify a file,
+run <code>sha256sum -c SHA256SUMS.txt</code> inside <code>data/</code>, or use
+<code>certutil -hashfile FILE SHA256</code> on Windows.</p>
+
+<h2>Which series to use</h2>
+<ul>
+<li><code>z_birth_nat</code>, the SPS (national dose), is the headline series. Start the sample in 2011-01, as the paper does.</li>
+<li><code>z_birth_reg</code> (the SPS, regional dose), <code>z_birth_count</code> (the SPS, count) and
+<code>z_birth_cap90</code> (the SPS, capped dose) are robustness versions: regional dose, no dose, and the
+national dose capped at its 90th percentile.</li>
+<li><code>z_death</code> is the negative biological counterpart. <code>z_hard</code>,
+<code>n_conflict</code> and <code>n_summit</code> describe hard political events, which governments choose
+and which are therefore <em>not</em> exogenous.</li>
+<li><code>A_panda</code> (attention to the panda, monthly Google index) and <code>A_china</code> are Google's monthly indices, to be used as the
+endogenous variable or as a first-stage check.</li>
+</ul>
+
+<h2>Outcome data</h2>
+<p>Trade, tourism and co-authorship series are not redistributed because they are covered by third-party
+licences. <a href="scripts/download_outcomes.md">download_outcomes.md</a> lists the sources (IMF IMTS,
+UN Comtrade, Eurostat Comext and tourism tables, national tourism statistics, OpenAlex) and what to
+download from each.</p>
+</div></main>
+<footer class="site"><div class="wrap">
+Panda Shocks v1.0 &middot; Zong-Wei Yeh, Department of Finance, National Chung Cheng University &middot;
+<a href="mailto:zweyeh@ccu.edu.tw">zweyeh@ccu.edu.tw</a> &middot; Data CC BY 4.0, code MIT.
+</div></footer>
+</body>
+</html>

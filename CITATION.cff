@@ -1,0 +1,32 @@
+cff-version: 1.2.0
+message: "If you use these data, please cite the paper and the dataset as below."
+title: "Panda Shocks: the Soft-Power Shock (SPS) series from giant panda births abroad, 2004–2025"
+type: dataset
+version: "1.0"
+date-released: "2026-11-01"
+license: CC-BY-4.0
+authors:
+  - family-names: Yeh
+    given-names: Zong-Wei
+    email: zweyeh@ccu.edu.tw
+    affiliation: "Department of Finance, National Chung Cheng University"
+# doi: 10.5281/zenodo.XXXXXXX   (added after the first Zenodo release)
+keywords:
+  - giant panda
+  - soft-power shock
+  - soft power
+  - public attention
+  - Google Trends
+  - instrumental variables
+  - local projections
+  - China
+preferred-citation:
+  type: article
+  title: "Soft Power Shocks: Does Attention to a Symbol Translate into Bilateral Exchange?"
+  authors:
+    - family-names: Yeh
+      given-names: Zong-Wei
+      affiliation: "Department of Finance, National Chung Cheng University"
+  year: 2026
+  status: preprint
+  notes: "Working paper, National Chung Cheng University"

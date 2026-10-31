@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Documentation - Panda Shocks</title>
+<meta name="description" content="Panda Shocks: the soft-power shock (SPS) series from giant-panda births abroad, 24 host jurisdictions, 2004-2025. Data by Zong-Wei Yeh, National Chung Cheng University.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="style.css">
+<script>window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] } };</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body>
+<header class="site"><div class="wrap">
+<a class="brand" href="index.html"><img src="favicon.svg" alt="">Panda Shocks</a>
+<nav class="main">
+<a href="index.html">Home</a>
+<a href="data.html">Data</a>
+<a href="documentation.html" class="on">Documentation</a>
+<a href="figures.html">Figures</a>
+<a href="updates.html">Updates</a>
+</nav>
+</div></header>
+<main><div class="wrap">
+<h1>Documentation</h1>
+<p class="sub">Construction of the Soft-Power Shock (SPS) series, version 1.0. Same content as
+<a href="documentation/CONSTRUCTION.md">CONSTRUCTION.md</a>; column definitions are in the
+<a href="documentation/CODEBOOK.md">codebook</a>.</p>
+
+<h2>1. What the shock is</h2>
+<p>A giant-panda birth in a foreign zoo is a dated event whose timing is set by biology. Implantation of
+the embryo is delayed by a variable amount and pseudo-pregnancies are common, so the month of a birth is
+hard to predict, both for the public and often for the keepers. The first announcement comes from the zoo,
+and no government decides anything on that date. The birth raises the host public's attention to the
+panda, the best-known symbol of China. The soft-power shock (SPS) is an exogenous rise in a foreign
+public's exposure to a country's soft-power asset that carries no change in policy. It is identified from
+the births of giant pandas at foreign zoos and measured as the dose of attention each birth draws; the
+doses are added up to a host &times; month SPS series.</p>
+<p>Hosts (24): AT, AU, BE, CA, DE, DK, ES, FI, FR, GB, HK, ID, JP, KR, MO, MX, MY, NL, QA, RU, SG, TH, TW, US;
+monthly, January 2004 to December 2025.</p>
+
+<h2>2. Event database</h2>
+<p><code>events.csv</code> records 491 dated events in the lives of the pandas on loan to the 24 hosts,
+1994&ndash;2025: loan announcements and agreements, arrivals, debuts, pregnancies, births, failed
+pregnancies, namings, cub debuts and departures, extensions, returns, recalls and deaths. Each row has</p>
+<ul>
+<li>the physical date of the event and the date of its <strong>first public announcement</strong>: a zoo
+release, a ministry statement or the first wire story. The announcement date is day 0 for attention. It is
+taken from dated sources, never from the peak in the search data;</li>
+<li>a <strong>bundling</strong> code: \(+1\) if a state visit, summit or major agreement between the host
+and China took place within &plusmn;7 days of the announcement, \(-1\) if a diplomatic conflict, sanction
+or punitive recall did, and \(0\) otherwise;</li>
+<li>at least one source URL (zoo release, wire service, national broadcaster; 55 rows rest on a Wikipedia
+page only, which the notes say).</li>
+</ul>
+<p>Bundling is common for government decisions and rare for biology: 18 of the 25 loan announcements are
+bundled, against one of the 67 births.</p>
+
+<h2>3. Daily attention</h2>
+<p><strong>Source.</strong> Google Trends, topic entity <em>Giant panda</em> (<code>/m/03bj1</code>), which
+pools searches in every language and script; the topic <em>China</em> (<code>/m/0d05w3</code>) is the
+comparison series. The monthly indices \(A_{i,t}\) cover 2004-01 to 2025-12. For each event announced on
+day \(d_e \ge\) 2004-02-01 with day precision, a daily window runs from \(d_e-60\) to \(d_e+120\). Windows
+are pulled for the national panda topic, the national China topic and, where Google reports it, the panda
+topic in the region of the zoo.</p>
+
+<p><strong>Rescaling.</strong> Google scales each request to a maximum of 100. Let \(v_{w,d}\) be the raw
+value on day \(d\) of window \(w\) and \(\bar v_{w,m}\) its mean over month \(m\), using months with at
+least 20 days in the window. The scale factor is the slope through the origin of the monthly index on the
+window's monthly means:</p>
+\[
+s_w = \frac{\sum_m A_{i,m}\,\bar v_{w,m}}{\sum_m \bar v_{w,m}^2},
+\qquad \tilde v_{w,d} = s_w\, v_{w,d}.
+\]
+<p>It requires at least three overlapping months and a window that is not all zeros.</p>
+
+<p><strong>Standardisation.</strong> The host standard deviation \(\sigma_i\) is computed from
+\(\tilde v_{w,d}\) pooled over the usable windows of the host and topic, on <em>non-event days</em> only,
+that is, outside \([-10,+40]\) of every dated event of the host. A window is usable if fewer than half of
+its days are zero and it passed the scale check. Attention in host-SD units is</p>
+\[
+a_{i,d} = \tilde v_{w,d} / \sigma_i .
+\]
+<p>One unit means the same thing in every host: one standard deviation of that host's ordinary daily
+fluctuation in interest in the panda. Regional series get their own \(\sigma\). Regional Taipei City
+windows are not used.</p>
+
+<h2>4. Event intensity</h2>
+<p>For event \(e\) in host \(i\) announced on day \(d_e\),</p>
+\[
+n_e = \frac{1}{3}\sum_{d=0}^{2} a_{i,d_e+d} \;-\; \frac{1}{5}\sum_{d=-7}^{-3} a_{i,d_e+d}.
+\]
+<p>The post window covers late-evening announcements, which reach Google's UTC data the next day. The
+pre window ends on day &minus;3 to keep leaks out of the baseline. Each event has three doses: national
+(<code>dose_national</code>), best-of (<code>dose_best</code>: the zoo's regional series if usable,
+otherwise national) and China topic (<code>dose_china</code>).</p>
+
+<h2>5. The monthly SPS series</h2>
+<p>With \(\mathcal B_{i,t}\) the births announced in host \(i\) in month \(t\) that pass the inclusion rules,</p>
+\[
+z_{i,t} = \sum_{e \in \mathcal B_{i,t}} n_e^{\text{national}},
+\]
+<p>and \(z_{i,t}=0\) in months without such a birth (<code>z_birth_nat</code>, the SPS (national dose), the headline). The variants
+are</p>
+<ul>
+<li><code>z_birth_reg</code>, the SPS (regional dose): the same sum with the best-of dose;</li>
+<li><code>z_birth_count</code>, the SPS (count): the number of births;</li>
+<li><code>z_birth_cap90</code>, the SPS (capped dose): the headline series capped at the 90th percentile of its nonzero
+2011&ndash;2025 values (15.70);</li>
+<li><code>z_death</code>: minus the summed doses of deaths;</li>
+<li><code>z_hard</code>: the signed intensity of hard political events (Section 6).</li>
+</ul>
+
+<h3>Inclusion rules</h3>
+<ol>
+<li><strong>Not bundled.</strong> Biological events with a bundling code \(\neq 0\) are excluded: one birth (Berlin 2019, four days before Chancellor Merkel's visit to China), three deaths and three namings.</li>
+<li><strong>Not a later media day.</strong> Rows recording a later media date of the same cub are excluded: the first veterinary examination, the sex reveal, the first photograph or video.</li>
+<li><strong>Measurable dose.</strong> The announcement has day precision and falls on or after 2004-02-01, and the national window is usable (fewer than half of its days zero, scale check passed).</li>
+<li><strong>Not a measurement zero.</strong> Biological events at Adventure World (Wakayama) and Kobe Oji Zoo announced before 2017 are treated as missing doses: Google's topic barely captured Japanese-script searches before 2017. Births at Ueno Zoo in Tokyo stay in.</li>
+</ol>
+<p><strong>Sample.</strong> The paper's instrumental-variable sample starts in 2011-01, because most earlier
+birth windows are too sparse to measure a dose. The monthly file starts in 2004-02 so that users can
+choose; every <code>z_*</code> is missing in 2004-01. Over 2011&ndash;2025 the headline series has
+<strong>33 nonzero host-months in 14 hosts</strong>, with a median dose of <strong>3.08</strong>.</p>
+
+<h2>6. Hard political events</h2>
+<p><code>hard_events.csv</code> lists 98 dated events between China and the hosts, plus a few other
+countries. They are coded \(-1\) for conflicts (54: meetings of heads of state or government with the
+Dalai Lama, sanctions and boycotts, Taiwan-related and territorial disputes, arrests, human-rights
+conflicts) and \(+1\) for rapprochement (44: summits, state visits, major agreements). Their intensity
+\(n_k^{\text{China}}\) is measured like a birth's, on the China topic. It is missing if half or more of the
+window's days are zero.</p>
+\[
+z^{\text{hard}}_{i,t} = \sum_{k \in \mathcal H_{i,t}} \text{direction}_k \cdot n_k^{\text{China}},
+\qquad
+n^{\text{conflict}}_{i,t} = \#\{k : \text{direction}_k = -1\}, \quad
+n^{\text{summit}}_{i,t} = \#\{k : \text{direction}_k = +1\}.
+\]
+<p>The counts use every in-panel hard event, with or without a measurable intensity. Governments choose
+these events, so they are <em>not</em> exogenous; in the paper they serve as a positive control.</p>
+
+<h2>7. Companion files</h2>
+<ul>
+<li><code>attempts.csv</code>: 144 announced breeding attempts with outcomes and the paper's
+success / fail / drop assignment.</li>
+<li><code>placebo_animals.csv</code>: 17 non-China animal events (Knut, Harambe, Marius, Moo Deng, ...)
+with the intensity on their own Google topic.</li>
+<li><code>policy_regimes.csv</code>: 139 dated travel and trade regimes (Chinese group-tour bans, visa
+waivers in both directions, flight suspensions, FTAs) with sources.</li>
+<li><code>attention_daily_windows.csv</code>, <code>attention_spillover_windows.csv</code>: the daily data
+behind every dose.</li>
+</ul>
+
+<h2>8. Known measurement issues</h2>
+<ul>
+<li><strong>Japan before 2017.</strong> Attention to the panda (monthly Google index) averages about 6 before 2017 and about 44
+after, with a permanent jump at the birth of Xiang Xiang (June 2017). This reflects topic coverage of
+Japanese-script searches, not interest, and is the reason for inclusion rule 4. Taiwan and Macau show
+milder versions.</li>
+<li><strong>Spain and Mexico, 2004&ndash;2006.</strong> The panda topic is very high and then decays,
+most likely because searches for the antivirus company Panda Security were mapped into it. This affects
+the early level of <code>A_panda</code> but no event in the 2011+ SPS series.</li>
+<li><strong>Google collection changes</strong> in 2016-01 and 2022-01 appear as small steps in several
+monthly series.</li>
+<li><strong>Single pulls.</strong> Google Trends values come from a sample of searches and differ
+slightly between pulls; v1.0 uses one pull per series.</li>
+<li><strong>Sparse regional data.</strong> Regional windows are usable for 157 of 351 events.</li>
+<li><strong>Low-confidence dates.</strong> Japanese and Mexican announcements before 2011 are often copies
+of the birth date. None is in the 2011+ SPS series.</li>
+</ul>
+
+<h2>9. Reproducing a dose</h2>
+<pre>import pandas as pd
+w = pd.read_csv("data/attention_daily_windows.csv")
+w = w[(w.event_set == "panda_event") &amp; (w.topic == "panda")]
+post = w[w.rel_day.between(0, 2)].groupby("event_id").value_std.mean()
+pre  = w[w.rel_day.between(-7, -3)].groupby("event_id").value_std.mean()
+dose = post - pre          # equals events.csv dose_national</pre>
+
+<h2>10. Example: panel local projection</h2>
+\[
+y_{i,t+h} - y_{i,t-1} = \alpha^h_i + \lambda^h_t + \beta^h z_{i,t} + e_{i,t+h}, \qquad h = 0,\dots,24,
+\]
+<p>with standard errors clustered by month: <a href="examples/lp_example.py">lp_example.py</a> (Python,
+statsmodels) and <a href="examples/lp_example.do">lp_example.do</a> (Stata, reghdfe). Outcome data are
+not distributed; <a href="scripts/download_outcomes.md">download_outcomes.md</a> lists the sources.</p>
+</div></main>
+<footer class="site"><div class="wrap">
+Panda Shocks v1.0 &middot; Zong-Wei Yeh, Department of Finance, National Chung Cheng University &middot;
+<a href="mailto:zweyeh@ccu.edu.tw">zweyeh@ccu.edu.tw</a> &middot; Data CC BY 4.0, code MIT.
+</div></footer>
+</body>
+</html>
