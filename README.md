@@ -2,7 +2,6 @@
 
 **The Soft-Power Shock (SPS) series from giant panda births abroad, 24 host jurisdictions, 2004–2025.**
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.XXXXXXX.svg)](https://doi.org/10.5281/zenodo.XXXXXXX)
 *(DOI placeholder: replace after the first Zenodo release.)*
 
 Zong-Wei Yeh, Department of Finance, National Chung Cheng University (zweyeh@ccu.edu.tw)
@@ -70,8 +69,6 @@ Please cite the paper and the dataset:
 > Yeh, Zong-Wei (2026). "Soft Power Shocks: Does Attention to a Symbol Translate into Bilateral
 > Exchange?" Working Paper, Department of Finance, National Chung Cheng University.
 
-> Yeh, Zong-Wei (2026). *Panda Shocks: the Soft-Power Shock (SPS) series from giant panda births
-> abroad, 2004–2025*, version 1.0 [dataset]. DOI: 10.5281/zenodo.XXXXXXX.
 
 BibTeX is in `CITATION.bib`; machine-readable metadata are in `CITATION.cff` and `.zenodo.json`.
 

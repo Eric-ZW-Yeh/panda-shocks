@@ -50,8 +50,8 @@ animal events, policy regimes, and every daily window from which a dose is compu
 <option value="z_birth_cap90">The SPS (capped dose)</option>
 <option value="z_death">Deaths (z_death)</option>
 <option value="z_hard">Hard political events (z_hard)</option>
+<option value="A_panda">Attention to the panda (monthly Google index)</option>
 </select></label>
-<label class="check"><input type="checkbox" id="sps-overlay"> Overlay attention to the panda (monthly Google index)</label>
 </div>
 <div id="sps-chart" class="chart" role="img" aria-label="Interactive chart of the soft-power shock series for the selected host, 2004 to 2025"></div>
 <p class="chart-caption" id="sps-caption">Each spike is one usable giant-panda birth announced in that month; its height is the dose, the jump in the host's attention to the panda in national-SD units.</p>
@@ -85,12 +85,10 @@ shows the summed series, and every host's series is in
 </ul>
 
 <h2>Citation</h2>
-<p>If you use the data, please cite the paper and the dataset:</p>
+<p>If you use the data, please cite the paper:</p>
 <div class="box">
 Yeh, Zong-Wei (2026). &ldquo;Soft Power Shocks: Does Attention to a Symbol Translate into Bilateral
-Exchange?&rdquo; Working Paper, Department of Finance, National Chung Cheng University.<br><br>
-Yeh, Zong-Wei (2026). <em>Panda Shocks: the Soft-Power Shock (SPS) series from giant panda births abroad,
-2004&ndash;2025</em>, version 1.0 [dataset]. DOI: 10.5281/zenodo.XXXXXXX.
+Exchange?&rdquo; Working Paper, Department of Finance, National Chung Cheng University.
 </div>
 <pre>@techreport{yeh2026panda,
   author      = {Yeh, Zong-Wei},
@@ -99,19 +97,8 @@ Yeh, Zong-Wei (2026). <em>Panda Shocks: the Soft-Power Shock (SPS) series from g
   institution = {Department of Finance, National Chung Cheng University},
   type        = {Working Paper},
   year        = {2026}
-}
-
-@misc{yeh2026pandashocks,
-  author       = {Yeh, Zong-Wei},
-  title        = {Panda Shocks: the Soft-Power Shock ({SPS}) series from
-                  giant panda births abroad, 2004--2025},
-  year         = {2026},
-  version      = {1.0},
-  howpublished = {Dataset},
-  note         = {DOI: 10.5281/zenodo.XXXXXXX}
-}</pre>
-<p class="sub">Also available as <a href="CITATION.bib">CITATION.bib</a> and <a href="CITATION.cff">CITATION.cff</a>.
-The DOI is a placeholder until the first archived release.</p>
+}}</pre>
+<p class="sub">Also available as <a href="CITATION.bib">CITATION.bib</a> and <a href="CITATION.cff">CITATION.cff</a>.</p>
 
 <h2>Author</h2>
 <p>Zong-Wei Yeh, Department of Finance, National Chung Cheng University, Chiayi, Taiwan &middot;
@@ -144,10 +131,12 @@ Panda Shocks v1.0 &middot; Zong-Wei Yeh, Department of Finance, National Chung C
     z_death:       { name: "Deaths (z_death)", y: "SD units of announcement-window attention (negative)",
                      cap: "Each spike is a usable panda death announced in that month; its depth is minus the dose." },
     z_hard:        { name: "Hard political events (z_hard)", y: "China-topic SD units (signed)",
-                     cap: "Signed intensity of hard political events: conflicts below zero, summits and deals above. These are chosen by governments and are not exogenous." }
+                     cap: "Signed intensity of hard political events: conflicts below zero, summits and deals above. These are chosen by governments and are not exogenous." },
+    A_panda:       { name: "Attention to the panda (monthly Google index)", y: "Google Trends index (0\u2013100)",
+                     cap: "Monthly Google Trends index for the giant panda topic in the host, scaled by Google to 100 at the host's own maximum; the SPS is built from the daily series around each birth, not from this index." }
   };
   var hostSel = document.getElementById("sps-host"), serSel = document.getElementById("sps-series");
-  var ovl = document.getElementById("sps-overlay"), dl = document.getElementById("sps-download");
+  var dl = document.getElementById("sps-download");
   var x = D.months.map(function (m) { return m + "-01"; });
   D.hosts.forEach(function (h) {
     var o = document.createElement("option");
@@ -156,7 +145,6 @@ Panda Shocks v1.0 &middot; Zong-Wei Yeh, Department of Finance, National Chung C
   });
   var m = /host=([A-Z]{2})/.exec(location.hash + location.search);
   hostSel.value = (m && D.hosts.some(function (h) { return h.code === m[1]; })) ? m[1] : "US";
-  if (/overlay=1/.test(location.hash + location.search)) { ovl.checked = true; }
   ["sps-controls", "sps-tools", "sps-table-wrap"].forEach(function (id) { document.getElementById(id).hidden = false; });
 
   function host() { var c = hostSel.value; return D.hosts.filter(function (h) { return h.code === c; })[0]; }
@@ -166,32 +154,26 @@ Panda Shocks v1.0 &middot; Zong-Wei Yeh, Department of Finance, National Chung C
     var h = host(), k = serSel.value, s = SER[k], v = h[k];
     var nz = { x: [], y: [] };
     v.forEach(function (val, i) { if (val) { nz.x.push(x[i]); nz.y.push(val); } });
-    var traces = [
+    var traces = (k === "A_panda") ? [
+      { type: "scatter", mode: "lines", x: x, y: v, name: s.name, connectgaps: false,
+        line: { color: NAVY, width: 1.4 },
+        hovertemplate: "%{x|%Y-%m}: %{y:.0f}<extra>" + s.name + "</extra>" }
+    ] : [
       { type: "bar", x: x, y: v, name: s.name, marker: { color: NAVY }, width: 1000 * 3600 * 24 * 25,
         hovertemplate: "%{x|%Y-%m}: %{y:.2f}<extra>" + s.name + "</extra>" },
       { type: "scatter", mode: "markers", x: nz.x, y: nz.y, marker: { color: NAVY, size: 6 },
         hoverinfo: "skip", showlegend: false }
     ];
     var layout = {
-      margin: { l: 64, r: ovl.checked ? 56 : 16, t: 16, b: 40 }, height: chart.clientWidth < 500 ? 320 : 400,
+      margin: { l: 64, r: 16, t: 16, b: 40 }, height: chart.clientWidth < 500 ? 320 : 400,
       font: { family: "-apple-system, Segoe UI, Helvetica Neue, Arial, sans-serif", size: 13, color: "#222" },
       plot_bgcolor: "#fff", paper_bgcolor: "#fff", bargap: 0, hovermode: "closest",
       xaxis: { type: "date", range: ["2004-01-01", "2025-12-31"], dtick: "M24", tickformat: "%Y",
                showgrid: false, linecolor: "#999", ticks: "outside" },
       yaxis: { title: { text: s.y, font: { size: 12 } }, zeroline: true, zerolinecolor: "#999",
                gridcolor: "#eceef3", rangemode: k === "z_death" ? "normal" : "tozero" },
-      showlegend: ovl.checked, legend: { orientation: "h", x: 0, y: 1.08, font: { size: 12 } }
+      showlegend: false
     };
-    if (ovl.checked) {
-      traces.push({ type: "scatter", mode: "lines", x: x, y: h.A_panda, yaxis: "y2", connectgaps: false,
-                    name: "Attention to the panda (monthly Google index, right axis)",
-                    line: { color: GRAY, width: 1 },
-                    hovertemplate: "%{x|%Y-%m}: %{y:.0f}<extra>attention to the panda</extra>" });
-      traces[0].showlegend = true;
-      layout.yaxis2 = { overlaying: "y", side: "right", range: [0, 100], showgrid: false,
-                        title: { text: "Google index (0–100)", font: { size: 12, color: GRAY } },
-                        tickfont: { color: GRAY } };
-    }
     Plotly.react(chart, traces, layout, { responsive: true, displaylogo: false,
       modeBarButtonsToRemove: ["select2d", "lasso2d", "autoScale2d"] });
     document.getElementById("sps-caption").textContent = s.cap;
@@ -225,7 +207,6 @@ Panda Shocks v1.0 &middot; Zong-Wei Yeh, Department of Finance, National Chung C
 
   hostSel.addEventListener("change", draw);
   serSel.addEventListener("change", draw);
-  ovl.addEventListener("change", draw);
   draw();
 })();
 </script>
